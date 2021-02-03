@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Artifacts Blocked Days</title>
+
+    <script type="text/javascript" src="https://eu1.rallydev.com/apps/2.1/sdk.js"></script>
+
+    <script type="text/javascript">
+        Rally.onReady(function () {
+                Ext.define("CustomApp",{extend:"Rally.app.App",componentCls:"app",launch:function(){this.iterationCombobox=this.add({xtype:"rallyiterationcombobox",context:this.getContext(),listeners:{ready:this._onIterationComboboxChanged,select:this._onIterationComboboxChanged,scope:this}})},_onIterationComboboxChanged:function(){let t=this;this.getSnapshotStore().load().then({success:function(e){let a=t.getCustomStoreRecords(e),o=Ext.create("Rally.data.custom.Store",{data:a});var r=this.down("rallygrid");t.remove(r);var n=this.getGrid(o);t.grid=t.add(n)},scope:this})},getSnapshotStore:function(){let t=parseInt(this.iterationCombobox.value.split("/")[2]);return Ext.create("Rally.data.lookback.SnapshotStore",{that:this,fetch:["FormattedID","Name","ScheduleState","Iteration"],compress:!0,context:{workspace:this.getContext().getWorkspace(),project:this.getContext().getProject(),projectScopeUp:this.getContext().getProjectScopeUp(),projectScopeDown:this.getContext().getProjectScopeDown()},filters:[{property:"Blocked",operator:"=",value:!0},{property:"Iteration",operator:"=",value:t}],sorters:[{property:"ObjectID"},{property:"_ValidFrom",direction:"DESC"}],listeners:{load:function(t,e){}},hydrate:["ScheduleState","Iteration"]})},date_diff_indays:function(t,e){let a=new Date(t),o=new Date(e);return 9999===a.getFullYear()&&(a=new Date),9999===o.getFullYear()&&(o=new Date),Math.floor((o.getTime()-a.getTime())/864e5)},getCustomStoreRecords:function(t){let e={};for(var a of(Ext.define("grouped_snapshots",{extend:"Ext.data.Model",fields:[{name:"FormattedID",type:"string"},{name:"ObjectID",type:"int",convert:null},{name:"ScheduleState",type:"string"},{name:"Iteration",type:"string"},{name:"Name",type:"String",defaultValue:!0,convert:null},{name:"DaysBlocked",type:"int",defaultValue:0}]}),t))void 0===e[a.get("FormattedID")]&&(e[a.get("FormattedID")]=Ext.create("grouped_snapshots",{}),Ext.apply(e[a.get("FormattedID")].data,a.getData()),e[a.get("FormattedID")].set("Iteration",a.get("Iteration").Name)),e[a.data.FormattedID].data.DaysBlocked=e[a.data.FormattedID].data.DaysBlocked+this.date_diff_indays(a.data._ValidFrom,a.data._ValidTo);return Object.values(e)},getGrid:function(t){return{xtype:"rallygrid",autoScroll:!0,showPagingToolbar:!1,columnCfgs:[{text:"ID",dataIndex:"FormattedID",width:100},{text:"Name",dataIndex:"Name",flex:1},{text:"Schedule State",dataIndex:"ScheduleState"},{text:"Iteration",dataIndex:"Iteration"},{text:"Days Blocked",dataIndex:"DaysBlocked"}],enableEditing:!1,store:t,listeners:{load:function(t){}}}}});
+
+            Rally.launchApp('CustomApp', {
+                name:"Artifacts Blocked Days",
+                parentRepos:"",
+                version:"0.1.1"
+            });
+
+        });
+    </script>
+
+
+    <style type="text/css">
+        .app{margin:10px}.app .cardboard{border:2px solid green}
+    </style>
+</head>
+<body>
+</body>
+</html>

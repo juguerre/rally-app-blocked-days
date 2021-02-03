@@ -1,0 +1,12 @@
+{
+    "name": "Artifacts Blocked Days",
+    "className": "CustomApp",
+    "server": "https://eu1.rallydev.com",
+    "sdk": "2.1",
+    "javascript": [
+        "App.js"
+    ],
+    "css": [
+        "app.css"
+    ]
+}
