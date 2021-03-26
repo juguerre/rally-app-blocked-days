@@ -1,6 +1,6 @@
 {
     "name": "Artifacts Blocked Days",
-    "className": "CustomApp",
+    "className": "BlockedDays",
     "server": "https://eu1.rallydev.com",
     "sdk": "2.1",
     "javascript": [
